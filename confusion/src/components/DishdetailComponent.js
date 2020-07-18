@@ -1,58 +1,58 @@
-import React, { Component } from "react";
+import React from "react";
 import { Card, CardImg, CardText, CardBody, CardTitle } from "reactstrap";
 
-class DishDetail extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  renderDish(dish) {
-    if (dish != null)
-      return (
-        <Card>
-          <CardImg top src={dish.image} alt={dish.name} />
-          <CardBody>
-            <CardTitle>{dish.name}</CardTitle>
-            <CardText>{dish.description}</CardText>
-          </CardBody>
-        </Card>
-      );
-    else return <div></div>;
-  }
-
-  renderComments(dish) {
-    if (dish != null)
-      return (
-        <div>
-          <h4>Comments</h4>
-          <ul className="list-group">
-            {dish.comments.map((comment) => (
-              <li className="list-group-item">
-                {comment.comment}
-                <br />
-                --{comment.author}, {comment.date}
-              </li>
-            ))}
-          </ul>
-        </div>
-      );
-    else return <div></div>;
-  }
-
-  render() {
+function RenderDish({ dish }) {
+  if (dish != null)
     return (
-      <div className="row">
-        <div className="col-12 col-md-5 m-1">
-          {this.renderDish(this.props.selectedDish)}
-        </div>
+      <Card>
+        <CardImg top src={dish.image} alt={dish.name} />
+        <CardBody>
+          <CardTitle>{dish.name}</CardTitle>
+          <CardText>{dish.description}</CardText>
+        </CardBody>
+      </Card>
+    );
+  else return <div></div>;
+}
 
-        <div className="col-12 col-md-5 m-1">
-          {this.renderComments(this.props.selectedDish)}
-        </div>
+function RenderComments({ dish }) {
+  if (dish != null)
+    return (
+      <div>
+        <h4>Comments</h4>
+        <ul className="list-group">
+          {dish.comments.map((comment) => (
+            <li className="list-group-item">
+              {comment.comment}
+              <br />
+              --{comment.author},{" "}
+              {new Intl.DateTimeFormat("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "2-digit",
+              }).format(new Date(Date.parse(comment.date)))}
+            </li>
+          ))}
+        </ul>
       </div>
     );
-  }
+  else return <div></div>;
 }
+
+const DishDetail = (props) => {
+  return (
+    <div className="container">
+      <div className="row">
+        <div className="col-12 col-md-5 m-1">
+          <RenderDish dish={props.selectedDish} />
+        </div>
+
+        <div className="col-12 col-md-5 m-1">
+          <RenderComments dish={props.selectedDish} />
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default DishDetail;
