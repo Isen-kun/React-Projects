@@ -14,6 +14,19 @@ function About(props) {
     return <p>Leader {leader.name}</p>;
   });
 
+  const RenderLeader = props.leaders.map((leader) => {
+    return (
+      <div className="media">
+        <img src={leader.image} className="mr-5" alt=""></img>
+        <div className="media-body">
+          <h5 className="mt-0">{leader.name}</h5>
+          <p>{leader.designation}</p>
+          <p>{leader.description}</p>
+        </div>
+      </div>
+    );
+  });
+
   return (
     <div className="container">
       <div className="row">
@@ -90,7 +103,7 @@ function About(props) {
           <h2>Corporate Leadership</h2>
         </div>
         <div className="col-12">
-          <Media list>{leaders}</Media>
+          <Media list>{RenderLeader}</Media>
         </div>
       </div>
     </div>
