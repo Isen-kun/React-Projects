@@ -12,6 +12,7 @@ import {
   ModalHeader,
   ModalBody,
   Row,
+  Col,
   Label,
 } from "reactstrap";
 import { Link } from "react-router-dom";
@@ -46,9 +47,13 @@ class CommentForm extends Component {
   }
 
   handleSubmit(values) {
-    console.log("Current State is: " + JSON.stringify(values));
-    alert("Current State is: " + JSON.stringify(values));
-    //event.preventDefault();
+    this.toggleModal();
+    this.props.addComment(
+      this.props.dishId,
+      values.rating,
+      values.author,
+      values.comment
+    );
   }
 
   render() {
@@ -62,47 +67,57 @@ class CommentForm extends Component {
           <ModalBody>
             <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
               <Row className="form-group">
-                <Label htmlFor="rating">Rating</Label>
-                <select className="form-control" id="select">
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
-                </select>
+                <Col>
+                  <Label htmlFor="rating">Rating</Label>
+                  <Control.select
+                    className="form-control"
+                    id="select"
+                    model=".rating"
+                  >
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                  </Control.select>
+                </Col>
               </Row>
               <Row className="form-group">
-                <Label htmlFor="name">Your name</Label>
-                <Control.text
-                  className="form-control"
-                  placeholder="Your Name"
-                  model=".name"
-                  id="name"
-                  validators={{
-                    required,
-                    minLength: minLength(2),
-                    maxLength: maxLength(15),
-                  }}
-                />
-                <Errors
-                  className="text-danger"
-                  model=".name"
-                  show="touched"
-                  messages={{
-                    required: "Required",
-                    minLength: "Must be greater than 2 characters",
-                    maxLength: "Must be 15 characters or less",
-                  }}
-                />
+                <Col>
+                  <Label htmlFor="name">Your name</Label>
+                  <Control.text
+                    className="form-control"
+                    placeholder="Your Name"
+                    model=".name"
+                    id="name"
+                    validators={{
+                      required,
+                      minLength: minLength(2),
+                      maxLength: maxLength(15),
+                    }}
+                  />
+                  <Errors
+                    className="text-danger"
+                    model=".name"
+                    show="touched"
+                    messages={{
+                      required: "Required",
+                      minLength: "Must be greater than 2 characters",
+                      maxLength: "Must be 15 characters or less",
+                    }}
+                  />
+                </Col>
               </Row>
               <Row className="form-group">
-                <Label htmlFor="comment">Comment</Label>
-                <Control.textarea
-                  className="form-control"
-                  model=".comment"
-                  id="comment"
-                  rows="6"
-                ></Control.textarea>
+                <Col>
+                  <Label htmlFor="comment">Comment</Label>
+                  <Control.textarea
+                    className="form-control"
+                    model=".comment"
+                    id="comment"
+                    rows="6"
+                  ></Control.textarea>
+                </Col>
               </Row>
               <Button type="submit" value="submit" color="primary">
                 Submit
@@ -129,7 +144,7 @@ function RenderDish({ dish }) {
   );
 }
 
-function RenderComments({ comments }) {
+function RenderComments({ comments, addComment, dishId }) {
   if (comments != null)
     return (
       <div className="col-12 col-md-5 m-1">
@@ -151,6 +166,7 @@ function RenderComments({ comments }) {
             );
           })}
         </ul>
+        <CommentForm dishId={dishId} addComment={addComment} />
       </div>
     );
   else return <div></div>;
@@ -174,10 +190,11 @@ const DishDetail = (props) => {
         </div>
         <div className="row">
           <RenderDish dish={props.dish} />
-          <div className="col no-gutters">
-            <RenderComments comments={props.comments} />
-            <CommentForm />
-          </div>
+          <RenderComments
+            comments={props.comments}
+            addComment={props.addComment}
+            dishId={props.dish.id}
+          />
         </div>
       </div>
     );
