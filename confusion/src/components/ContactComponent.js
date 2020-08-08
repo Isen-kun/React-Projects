@@ -25,10 +25,19 @@ class Contact extends Component {
   }
 
   handleSubmit(values) {
-    console.log("Current State is: " + JSON.stringify(values));
-    alert("Current State is: " + JSON.stringify(values));
+    console.log("Current state is: " + JSON.stringify(values));
+    alert("Thank you for your feedback!\n " + JSON.stringify(values));
+    this.props.postFeedback(
+      values.firstname,
+      values.lastname,
+      values.telnum,
+      values.email,
+      values.agree,
+      values.contactType,
+      values.message
+    );
+
     this.props.resetFeedbackForm();
-    // event.preventDefault();
   }
 
   render() {
@@ -79,7 +88,7 @@ class Contact extends Component {
               >
                 <i className="fa fa-phone"></i> Call
               </a>
-              <a role="button" className="btn btn-info" href="skype.com">
+              <a role="button" className="btn btn-info">
                 <i className="fa fa-skype"></i> Skype
               </a>
               <a
@@ -92,10 +101,9 @@ class Contact extends Component {
             </div>
           </div>
         </div>
-
         <div className="row row-content">
           <div className="col-12">
-            <h3>Send us your Feedback</h3>
+            <h3>Send us your feedback</h3>
           </div>
           <div className="col-12 col-md-9">
             <Form
@@ -131,6 +139,7 @@ class Contact extends Component {
                   />
                 </Col>
               </Row>
+
               <Row className="form-group">
                 <Label htmlFor="lastname" md={2}>
                   Last Name
@@ -162,14 +171,14 @@ class Contact extends Component {
               </Row>
               <Row className="form-group">
                 <Label htmlFor="telnum" md={2}>
-                  Contact Tel.
+                  Contact Tel.{" "}
                 </Label>
                 <Col md={10}>
                   <Control.text
                     model=".telnum"
                     id="telnum"
                     name="telnum"
-                    placeholder="Tel. Number"
+                    placeholder="Tel. Num"
                     className="form-control"
                     validators={{
                       required,
@@ -184,7 +193,7 @@ class Contact extends Component {
                     show="touched"
                     messages={{
                       required: "Required",
-                      minLength: "Must be greater than 2 numbers",
+                      minLength: "Must be greater than 2 number",
                       maxLength: "Must be 15 numbers or less",
                       isNumber: "Must be a number",
                     }}
@@ -270,5 +279,4 @@ class Contact extends Component {
     );
   }
 }
-
 export default Contact;
