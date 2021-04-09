@@ -1,12 +1,12 @@
-# Steps to run this priject:
+# Steps to run this project:
 
-###1. Download the code & run `npm install` to install dependencies before starting the app.
+### 1. Download the code & run `npm install` to install dependencies before starting the app.
 
-###2. Install Material UI as a dependency. To do this run `npm install @material-ui/core`.
+### 2. Install Material UI as a dependency. To do this run `npm install @material-ui/core`.
 
-###3. Run Json-Server by running `npx json-server --watch data/db.json --port 8000`
+### 3. Run Json-Server by running `npx json-server --watch data/db.json --port 8000`
 
-###4. Run `npm start` in a different terminal to start the development server
+### 4. Run `npm start` in a different terminal to start the development server
 
 # Getting Started with Create React App
 
