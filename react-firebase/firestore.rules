@@ -1,0 +1,79 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+      // allow read: if request.auth.uid == resource.data.owner; //use along with where query
+    match /schools/{itemId}{
+
+      allow read: if true;
+
+      allow create: if isValidSchool(request.resource.data) &&
+        isOwner(request.resource.data) &&
+        isSignedIn() &&
+        checkKeys();
+
+      allow update: if isValidSchool(request.resource.data) &&
+        isOwner(request.resource.data) &&
+        isOwner(resource.data) &&
+        isSignedIn() &&
+        isCalm() &&
+        checkKeys();
+
+      allow delete: if isOwner(resource.data) &&
+        isSignedIn();
+
+      // FUNCTIONS
+      function isSignedIn() {
+        return request.auth != null;
+      }
+  
+      function isOwner(school) {
+        return request.auth.uid == school.owner;
+      }
+  
+      function isValidSchool(school) {
+        return (
+          // school.title
+          school.title is string &&
+          school.title != '' &&
+          // school.desc
+          school.desc is string &&
+          // school.score
+          school.score is number &&
+          school.score >= 0 &&
+          school.score <= 10 &&
+          school.score != '' &&
+          // school.id
+          school.id is string &&
+          school.id != '' &&
+          // school.owner
+          school.owner is string &&
+          school.owner != '' &&
+          // school.ownerEmail
+          school.ownerEmail is string &&
+          school.ownerEmail != '' &&
+          // school.createdAt
+          school.createdAt is timestamp &&
+          school.createdAt != '' &&
+          // school.lastUpdate
+          school.lastUpdate is timestamp &&
+          school.lastUpdate != '' 
+        );
+      }
+
+      function isCalm() {
+        return ( 
+          request.time > resource.data.lastUpdate +
+          duration.value(5, 's')
+        ); 
+      }
+
+      function checkKeys() {
+        let requiredFields = ['title','score','id','owner','ownerEmail','createdAt','lastUpdate'];
+        let optionalFields = ['desc'];
+        let allFields = requiredFields.concat(optionalFields);
+        return request.resource.data.keys().hasAll(requiredFields) &&
+        request.resource.data.keys().hasOnly(allFields)
+      }
+    }
+  }
+}
